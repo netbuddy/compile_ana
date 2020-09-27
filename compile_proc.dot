@@ -1,0 +1,91 @@
+digraph G {
+  concentrate=True;
+  rankdir=TB;
+  node [shape=record];
+
+  phrase_0 [label="源码"];
+  main_src [label="main.c"];
+  comp1_src [label="comp1_func1.c|comp1_func2.c"];
+  comp2_src [label="comp2_func1.c"];
+
+  phrase_1 [label="编译"];
+  phrase_1_main [shape=none margin=0 label=<
+    <table border="0" cellborder="1" cellspacing="0">
+      <tr>
+        <td rowspan="2">main.o</td>
+        <td><font color="red">U</font></td>
+        <td><font color="blue">comp1_func1</font></td>
+      </tr>
+      <tr>
+        <td><font color="red">U</font></td>
+        <td><font color="blue">comp2_func1</font></td>
+      </tr>
+    </table>
+  >];
+  phrase_1_comp1 [shape=none margin=0 label=<
+    <table border="0" cellborder="1" cellspacing="0">
+      <tr>
+        <td rowspan="2">libcomp1.a</td>
+        <td>comp1_func1.o</td>
+        <td><font color="green">D</font></td>
+        <td><font color="blue">comp1_func1</font></td>
+      </tr>
+      <tr>
+        <td>comp1_func2.o</td>
+        <td><font color="green">D</font></td>
+        <td><font color="blue">comp1_func2</font></td>
+      </tr>
+    </table>
+  >];
+  phrase_1_comp2 [shape=none margin=0 label=<
+    <table border="0" cellborder="1" cellspacing="0">
+      <tr>
+        <td>libcomp2.a</td>
+        <td>comp2_func1.o</td>
+        <td><font color="green">D</font></td>
+        <td><font color="blue">comp2_func1</font></td>
+      </tr>
+    </table>
+  >];
+
+  phrase_2 [label="增量链接"];
+  phrase_2_main [shape=none margin=0 label=<
+    <table border="0" cellborder="1" cellspacing="0">
+      <tr>
+        <td rowspan="2">a.out.1</td>
+        <td><font color="green">D</font></td>
+        <td><font color="blue">comp1_func1</font></td>
+      </tr>
+      <tr>
+        <td><font color="red">U</font></td>
+        <td><font color="blue">comp2_func1</font></td>
+      </tr>
+    </table>
+  >];
+
+  phrase_3 [label="全链接"];
+  phrase_3_main [shape=none margin=0 label=<
+    <table border="0" cellborder="1" cellspacing="0">
+      <tr>
+        <td rowspan="3">a.out</td>
+        <td><font color="green">D</font></td>
+        <td><font color="blue">comp1_func1</font></td>
+      </tr>
+      <tr>
+        <td><font color="green">D</font></td>
+        <td><font color="blue">comp2_func1</font></td>
+      </tr>
+      <tr>
+        <td><font color="red">U</font></td>
+        <td><font color="blue">comp1_func2</font></td>
+      </tr>
+    </table>
+  >];
+
+  phrase_0 -> phrase_1 -> phrase_2 -> phrase_3
+  main_src -> phrase_1_main [label="gcc -c main.c"]
+  comp1_src -> phrase_1_comp1 [label="ar -rs libcomp1.a comp1_func1.o comp1_func2.o"]
+  comp2_src -> phrase_1_comp2 [label="ar -rs comp2_func1.c"]
+  phrase_1_main -> phrase_2_main [label="ld -static -o a.out.1 -i main.o -L. -lcomp1"]
+  phrase_2_main -> phrase_3_main [label="ld -static -o a.out -i main.o -L. -lcomp1 -lcomp2"]
+}

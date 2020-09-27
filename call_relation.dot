@@ -1,0 +1,23 @@
+digraph G {
+  concentrate=True;
+  rankdir=TB;
+  node [shape=record];
+
+  main_src [label="main.c" fillcolor="#dfc1c1" style="filled"];
+  comp1_func1_src [label="comp1_func1.c" fillcolor="#dfc1c1" style="filled"];
+  comp1_func2_src [label="comp1_func2.c" fillcolor="#dfc1c1" style="filled"];
+  comp2_func1_src [label="comp2_func1.c" fillcolor="#dfc1c1" style="filled"];
+
+  main [shape="ellipse" fillcolor="#c1dfc1" style="filled"];
+  comp1_func1 [shape="ellipse" fillcolor="#c1dfc1" style="filled"];
+  comp1_func2 [shape="ellipse" fillcolor="#c1dfc1" style="filled"];
+  comp2_func1 [shape="ellipse" fillcolor="#c1dfc1" style="filled"];
+  
+  main_src->main [label="定义" color="blue"];
+  comp1_func1_src->comp1_func1 [label="定义" color="blue"];
+  comp1_func2_src->comp1_func2 [label="定义" color="blue"];
+  comp2_func1_src->comp2_func1 [label="定义" color="blue"];
+  main->comp1_func1 [label="引用" style="dashed" color="orange"];
+  main->comp2_func1 [label="引用" style="dashed" color="orange"];
+  comp2_func1->comp1_func2 [label="引用" style="dashed" color="orange"];
+}
